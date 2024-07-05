@@ -13,11 +13,21 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  // Get Blogs
   useEffect(() => {
     const fetchBlogs = async () => {
       setBlogs(await blogService.getAll())
     }
     fetchBlogs()
+  }, [])
+
+  // Check if user is logged in during re-renders
+  useEffect(() => {
+    const jsonUser = window.localStorage.getItem('loggedInUser')
+    if (jsonUser) {
+      const parsedUser = JSON.parse(jsonUser)
+      setUser(parsedUser)
+    }
   }, [])
 
   /**
@@ -33,6 +43,7 @@ const App = () => {
 
     try {
       const returnedUser = await loginService.login(credentials)
+      window.localStorage.setItem('loggedInUser', JSON.stringify(returnedUser))
       setUser(returnedUser)
       setUsername('')
       setPassword('')
@@ -41,6 +52,12 @@ const App = () => {
       console.log(error)
       console.log(error.response.data)
     }
+  }
+
+  // Logout Handler
+  const handleLogout = async (event) => {
+    window.localStorage.clear()
+    setUser(null) // Need to do this because this will cause App re-render 
   }
 
   /**
@@ -72,7 +89,10 @@ const App = () => {
   const blogsRender = () => (
     <div>
       <h2>blogs</h2>
-      <p>{user.name} logged in</p>
+      <p>
+        {user.name} logged in
+        <button type='submit' name='logout' onClick={handleLogout}>Logout</button>
+      </p>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}

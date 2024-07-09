@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLikes }) => {
   const [view, setView] = useState(false)
 
   const hideWhenView = view ? { display: "none" } : { display: "" }
@@ -31,7 +31,7 @@ const Blog = ({ blog }) => {
         {blog.url}
         {"\n"}
         {blog.likes}
-        <button onClick={() => console.log("like pressed")}>like</button>
+        <button onClick={() => handleLikes(blog)}>like</button>
         {"\n"}
         {blog.user.name}
         {"\n"}

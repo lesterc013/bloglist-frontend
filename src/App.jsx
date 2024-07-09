@@ -104,6 +104,20 @@ const App = () => {
     }
   }
 
+  const handleLikes = async (blog) => {
+    const updateBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+    }
+    console.log("whole updateBlog", updateBlog)
+    try {
+      const returnedBlog = await blogService.update(updateBlog, user.token)
+      setBlogs(await blogService.getAll())
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   /**
    * HELPERS
    */
@@ -160,7 +174,7 @@ const App = () => {
         />
       </ToggleVisibility>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleLikes={handleLikes} />
       ))}
     </div>
   )

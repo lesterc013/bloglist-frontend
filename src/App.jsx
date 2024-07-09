@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Input from './components/Input'
 import Notification from './components/Notification'
@@ -41,6 +41,9 @@ const App = () => {
       setUser(parsedUser)
     }
   }, [])
+
+  // blogFormRef
+  const blogFormRef = useRef()
 
   /**
    * HANDLERS
@@ -99,6 +102,7 @@ const App = () => {
           setNotificationType(null)
         }, 5000)
       )
+      blogFormRef.current.switchVisible()
     } catch (error) {
       // Errors are when title and/or url is not provided
       handleErrorNotificationProcess('Blog title or url must be provided')
@@ -111,7 +115,7 @@ const App = () => {
       likes: blog.likes + 1,
     }
     try {
-      const returnedBlog = await blogService.update(updateBlog, user.token)
+      await blogService.update(updateBlog, user.token)
       setBlogs(await blogService.getAll())
     } catch (error) {
       console.log(error)
@@ -173,7 +177,7 @@ const App = () => {
           Logout
         </button>
       </p>
-      <ToggleVisibility buttonLabel='a new note'>
+      <ToggleVisibility buttonLabel='a new note' ref={blogFormRef}>
         <BlogForm
           handleCreateBlog={handleCreateBlog}
           title={title}

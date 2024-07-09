@@ -1,14 +1,21 @@
-import { useState } from "react"
+import { useState, forwardRef, useImperativeHandle } from 'react'
 
-const ToggleVisibility = (props) => {
+const ToggleVisibility = forwardRef((props, ref) => {
   const [visible, setVisible] = useState(false)
 
   // Need to hold the display properties based on visible
-  const hideWhenVisible = visible ? { display: "none" } : { display: "" }
-  const showWhenVisible = visible ? { display: "" } : { display: "none" }
+  const hideWhenVisible = visible ? { display: 'none' } : { display: '' }
+  const showWhenVisible = visible ? { display: '' } : { display: 'none' }
   const switchVisible = () => {
     setVisible(!visible)
   }
+
+  // To give the ref ability to call the switchVisible function from outside this component
+  useImperativeHandle(ref, () => {
+    return {
+      switchVisible,
+    }
+  })
 
   return (
     <>
@@ -22,6 +29,6 @@ const ToggleVisibility = (props) => {
       </div>
     </>
   )
-}
+})
 
 export default ToggleVisibility

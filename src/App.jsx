@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import Blog from "./components/Blog"
-import Input from "./components/Input"
 import Notification from "./components/Notification"
+import BlogForm from "./components/BlogForm"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 import login from "./services/login"
@@ -147,30 +147,15 @@ const App = () => {
           Logout
         </button>
       </p>
-      <form onSubmit={handleCreateBlog}>
-        <h2>create new</h2>
-        <Input
-          type="text"
-          name="title"
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-        />
-        <Input
-          type="text"
-          name="author"
-          value={author}
-          onChange={({ target }) => setAuthor(target.value)}
-        />
-        <Input
-          type="text"
-          name="url"
-          value={blogUrl}
-          onChange={({ target }) => setBlogUrl(target.value)}
-        />
-        <button type="submit" name="create">
-          Create
-        </button>
-      </form>
+      <BlogForm
+        handleCreateBlog={handleCreateBlog}
+        title={title}
+        author={author}
+        blogUrl={blogUrl}
+        setTitle={setTitle}
+        setAuthor={setAuthor}
+        setBlogUrl={setBlogUrl}
+      />
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
@@ -199,7 +184,11 @@ const App = () => {
     return
   }
 
-  return <>{!user ? loginFormRender() : blogsRender()}</>
+  return <div>{!user ? loginFormRender() : blogsRender()}</div>
 }
+
+/**
+ * COMPONENT BUILDING AREA
+ */
 
 export default App

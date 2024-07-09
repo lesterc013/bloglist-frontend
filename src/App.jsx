@@ -173,9 +173,11 @@ const App = () => {
           setBlogUrl={setBlogUrl}
         />
       </ToggleVisibility>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} handleLikes={handleLikes} />
-      ))}
+      {blogs
+        .toSorted((a, b) => b.likes - a.likes)
+        .map((blog) => (
+          <Blog key={blog.id} blog={blog} handleLikes={handleLikes} />
+        ))}
     </div>
   )
 

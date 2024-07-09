@@ -1,24 +1,25 @@
-import { useState, useEffect } from "react"
-import Blog from "./components/Blog"
-import Notification from "./components/Notification"
-import BlogForm from "./components/BlogForm"
-import ToggleVisibility from "./components/ToggleVisibility"
-import blogService from "./services/blogs"
-import loginService from "./services/login"
-import login from "./services/login"
-import "./index.css"
+import { useState, useEffect } from 'react'
+import Blog from './components/Blog'
+import Input from './components/Input'
+import Notification from './components/Notification'
+import BlogForm from './components/BlogForm'
+import ToggleVisibility from './components/ToggleVisibility'
+import blogService from './services/blogs'
+import loginService from './services/login'
+import login from './services/login'
+import './index.css'
 
 const App = () => {
   /**
    * HOOKS
    */
   const [blogs, setBlogs] = useState(null)
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [blogUrl, setBlogUrl] = useState("")
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [blogUrl, setBlogUrl] = useState('')
   const [createdBlogNotification, setCreatedBlogNotification] = useState(null)
   const [errorNotification, setErrorNotification] = useState(null)
   const [notificationType, setNotificationType] = useState(null)
@@ -34,7 +35,7 @@ const App = () => {
 
   // Check if user is logged in during re-renders
   useEffect(() => {
-    const jsonUser = window.localStorage.getItem("loggedInUser")
+    const jsonUser = window.localStorage.getItem('loggedInUser')
     if (jsonUser) {
       const parsedUser = JSON.parse(jsonUser)
       setUser(parsedUser)
@@ -54,12 +55,12 @@ const App = () => {
 
     try {
       const returnedUser = await loginService.login(credentials)
-      window.localStorage.setItem("loggedInUser", JSON.stringify(returnedUser))
+      window.localStorage.setItem('loggedInUser', JSON.stringify(returnedUser))
       setUser(returnedUser)
-      setUsername("")
-      setPassword("")
+      setUsername('')
+      setPassword('')
     } catch (error) {
-      handleErrorNotificationProcess("invalid username or password")
+      handleErrorNotificationProcess('invalid username or password')
     }
   }
 
@@ -80,14 +81,14 @@ const App = () => {
 
     try {
       const createdBlog = await blogService.create(newBlog, user.token)
-      setTitle("")
-      setAuthor("")
-      setBlogUrl("")
+      setTitle('')
+      setAuthor('')
+      setBlogUrl('')
       setBlogs(await blogService.getAll())
       setCreatedBlogNotification(
         `a new blog ${createdBlog.title} by ${createdBlog.author} added`
       )
-      setNotificationType("success")
+      setNotificationType('success')
       // Need to "clear" the error notification because it is possible that we create a blog WITHIN 5s of making an error post i.e. setTimeout to setErrorNotification to null would not get called and we will end up with issues; vice versa is applicable in the handleErrorNotification helper function
       setErrorNotification(null)
       // Clears the current timeoutId, and then sets a new one for every notification message
@@ -100,7 +101,7 @@ const App = () => {
       )
     } catch (error) {
       // Errors are when title and/or url is not provided
-      handleErrorNotificationProcess("Blog title or url must be provided")
+      handleErrorNotificationProcess('Blog title or url must be provided')
     }
   }
 
@@ -109,12 +110,22 @@ const App = () => {
       ...blog,
       likes: blog.likes + 1,
     }
-    console.log("whole updateBlog", updateBlog)
     try {
       const returnedBlog = await blogService.update(updateBlog, user.token)
       setBlogs(await blogService.getAll())
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const handleRemove = async (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      try {
+        await blogService.remove(blog, user.token)
+        setBlogs(await blogService.getAll())
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
@@ -130,19 +141,19 @@ const App = () => {
       />
       <form onSubmit={handleLogin}>
         <Input
-          type="text"
-          name="username"
+          type='text'
+          name='username'
           value={username}
           onChange={({ target }) => setUsername(target.value)}
         />
 
         <Input
-          type="password"
-          name="password"
+          type='password'
+          name='password'
           value={password}
           onChange={({ target }) => setPassword(target.value)}
         />
-        <button type="submit" name="login">
+        <button type='submit' name='login'>
           Login
         </button>
       </form>
@@ -158,11 +169,11 @@ const App = () => {
       />
       <p>
         {user.name} logged in
-        <button type="submit" name="logout" onClick={handleLogout}>
+        <button type='submit' name='logout' onClick={handleLogout}>
           Logout
         </button>
       </p>
-      <ToggleVisibility buttonLabel="a new note">
+      <ToggleVisibility buttonLabel='a new note'>
         <BlogForm
           handleCreateBlog={handleCreateBlog}
           title={title}
@@ -176,7 +187,13 @@ const App = () => {
       {blogs
         .toSorted((a, b) => b.likes - a.likes)
         .map((blog) => (
-          <Blog key={blog.id} blog={blog} handleLikes={handleLikes} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            handleLikes={handleLikes}
+            handleRemove={handleRemove}
+            user={user}
+          />
         ))}
     </div>
   )
@@ -186,7 +203,7 @@ const App = () => {
     // Must also set createdBlogNotification to null if not it will linger -- and vice versa for createdBlog timeout
     setCreatedBlogNotification(null)
     setErrorNotification(desiredNotification)
-    setNotificationType("error")
+    setNotificationType('error')
     setTimeoutId(
       setTimeout(() => {
         setErrorNotification(null)

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import Blog from "./components/Blog"
 import Notification from "./components/Notification"
 import BlogForm from "./components/BlogForm"
+import ToggleVisibility from "./components/ToggleVisibility"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 import login from "./services/login"
@@ -147,15 +148,17 @@ const App = () => {
           Logout
         </button>
       </p>
-      <BlogForm
-        handleCreateBlog={handleCreateBlog}
-        title={title}
-        author={author}
-        blogUrl={blogUrl}
-        setTitle={setTitle}
-        setAuthor={setAuthor}
-        setBlogUrl={setBlogUrl}
-      />
+      <ToggleVisibility buttonLabel="a new note">
+        <BlogForm
+          handleCreateBlog={handleCreateBlog}
+          title={title}
+          author={author}
+          blogUrl={blogUrl}
+          setTitle={setTitle}
+          setAuthor={setAuthor}
+          setBlogUrl={setBlogUrl}
+        />
+      </ToggleVisibility>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}

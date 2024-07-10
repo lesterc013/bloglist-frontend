@@ -22,13 +22,40 @@ const BlogForm = ({ handleCreateBlog }) => {
   return (
     <form onSubmit={handleBlogFormSubmit}>
       <h2>create new</h2>
-      <Input
+      <div>
+        title:
+        <input
+          type='text'
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+          data-testid='titleInput'
+        />
+      </div>
+      <div>
+        author:
+        <input
+          type='text'
+          value={author}
+          onChange={({ target }) => setAuthor(target.value)}
+          data-testid='authorInput'
+        />
+      </div>
+      <div>
+        url:
+        <input
+          type='text'
+          value={blogUrl}
+          onChange={({ target }) => setBlogUrl(target.value)}
+          data-testid='blogUrlInput'
+        />
+      </div>
+      {/* <Input
         type='text'
         name='title'
         value={title}
         onChange={({ target }) => setTitle(target.value)}
-      />
-      <Input
+      /> */}
+      {/* <Input
         type='text'
         name='author'
         value={author}
@@ -39,7 +66,7 @@ const BlogForm = ({ handleCreateBlog }) => {
         name='url'
         value={blogUrl}
         onChange={({ target }) => setBlogUrl(target.value)}
-      />
+      /> */}
       <button type='submit' name='create'>
         Create
       </button>

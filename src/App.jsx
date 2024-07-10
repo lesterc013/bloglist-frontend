@@ -17,9 +17,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [blogUrl, setBlogUrl] = useState('')
+  // const [title, setTitle] = useState('')
+  // const [author, setAuthor] = useState('')
+  // const [blogUrl, setBlogUrl] = useState('')
   const [createdBlogNotification, setCreatedBlogNotification] = useState(null)
   const [errorNotification, setErrorNotification] = useState(null)
   const [notificationType, setNotificationType] = useState(null)
@@ -74,19 +74,20 @@ const App = () => {
   }
 
   // Create Blog Handler
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
-    const newBlog = {
-      title,
-      author,
-      url: blogUrl,
-    }
+  // This is now only responsible to make POST request
+  const handleCreateBlog = async (newBlog) => {
+    // event.preventDefault()
+    // const newBlog = {
+    //   title,
+    //   author,
+    //   url: blogUrl,
+    // }
 
     try {
       const createdBlog = await blogService.create(newBlog, user.token)
-      setTitle('')
-      setAuthor('')
-      setBlogUrl('')
+      // setTitle('')
+      // setAuthor('')
+      // setBlogUrl('')
       setBlogs(await blogService.getAll())
       setCreatedBlogNotification(
         `a new blog ${createdBlog.title} by ${createdBlog.author} added`
@@ -178,15 +179,7 @@ const App = () => {
         </button>
       </p>
       <ToggleVisibility buttonLabel='a new note' ref={blogFormRef}>
-        <BlogForm
-          handleCreateBlog={handleCreateBlog}
-          title={title}
-          author={author}
-          blogUrl={blogUrl}
-          setTitle={setTitle}
-          setAuthor={setAuthor}
-          setBlogUrl={setBlogUrl}
-        />
+        <BlogForm handleCreateBlog={handleCreateBlog} />
       </ToggleVisibility>
       {blogs
         .toSorted((a, b) => b.likes - a.likes)

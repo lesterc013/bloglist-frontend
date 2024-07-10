@@ -20,11 +20,16 @@ test('<Blog /> only renders title and author on initial render', () => {
 
   const { container } = render(<Blog blog={blog} user={user} />)
 
-  // The style of the initialBlogRender should not be display: none
   const initialBlogRenderDiv = container.querySelector('.initialBlogRender')
+  const element = screen.getByText('test, tester')
+
+  const viewBlogRenderDiv = container.querySelector('.viewBlogRender')
+  // The style of the initialBlogRender should not be display: none
   expect(initialBlogRenderDiv).not.toHaveStyle('display: none')
 
+  // There should be an element with the text 'test, tester'
+  expect(element).toBeDefined()
+
   // The style of the pressViewRender should be display: none
-  const viewBlogRenderDiv = container.querySelector('.viewBlogRender')
   expect(viewBlogRenderDiv).toHaveStyle('display: none')
 })

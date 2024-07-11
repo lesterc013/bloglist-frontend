@@ -23,12 +23,20 @@ const Blog = ({ blog, handleLikes, handleRemove, user }) => {
         padding: '5px',
       }}
     >
-      <div style={hideWhenView} className='initialBlogRender'>
+      <div
+        style={hideWhenView}
+        className='initialBlogRender'
+        data-testid='initialBlogRender'
+      >
         {blog.title}, {blog.author}
         <button onClick={switchView}>view</button>
       </div>
 
-      <div style={showWhenView} className='viewBlogRender'>
+      <div
+        style={showWhenView}
+        className='viewBlogRender'
+        data-testid='viewBlogRender'
+      >
         {blog.title}, {blog.author}
         <button onClick={switchView}>hide</button>
         {'\n'}

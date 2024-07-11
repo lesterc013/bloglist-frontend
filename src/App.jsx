@@ -158,13 +158,13 @@ const App = () => {
         message={errorNotification || createdBlogNotification}
         notificationType={notificationType}
       />
-      <p>
+      <p data-testid='loggedIn'>
         {user.name} logged in
         <button type='submit' name='logout' onClick={handleLogout}>
           Logout
         </button>
       </p>
-      <ToggleVisibility buttonLabel='a new note' ref={blogFormRef}>
+      <ToggleVisibility buttonLabel='a new blog' ref={blogFormRef}>
         <BlogForm handleCreateBlog={handleCreateBlog} />
       </ToggleVisibility>
       {blogs
